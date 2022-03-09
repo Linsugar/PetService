@@ -8,6 +8,7 @@ import (
 )
 
 var Db *gorm.DB
+
 func init() {
 	host := "139.155.88.241"
 	port := "3388"
@@ -23,14 +24,14 @@ func init() {
 		database,
 		charset)
 	dataDase, err := gorm.Open("mysql", dsn)
-	if err!=nil{
-		fmt.Println("有误",err)
+	if err != nil {
+		fmt.Println("有误", err)
 		panic(err)
 
 		//return
 	}
-	fmt.Println("链接成功",err)
 	Db = dataDase
+	Db.AutoMigrate(&Models.User{}, &Models.PetDetail{})
+	fmt.Println("链接成功", err)
 
-	Db.AutoMigrate(&Models.User{},&Models.PetDetail{})
 }

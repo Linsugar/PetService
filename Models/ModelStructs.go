@@ -8,39 +8,38 @@ import (
 type User struct {
 	//用户信息表
 	gorm.Model
-	Username string `gorm:"not null"`
-	Password string
-	Phone string `gorm:"unique;index:phone"`
-	CreateCity string
-	CreateAddress string
-	InitIp string
-	NowIp string
-	Token string `gorm:"column:token;unique"`
-	IsDel bool  //是否删除
-	UserId sql.NullString  `gorm:"unique;unique_index;not null"`//不重复id
-	InvitePerson int //邀请人id某人为空
-	ProfilePicture string //头像地址
+	Username       string `gorm:"not null" json:"username" binding:"required"`
+	Password       string `json:"password" binding:"required"`
+	Phone          string `gorm:"unique;index:phone" json:"phone" binding:"required"`
+	CreateCity     string `gorm:"default:'成都'"`
+	CreateAddress  string `gorm:"default:'成都高新区'"`
+	InitIp         string
+	NowIp          string
+	Token          string         `gorm:"column:token;"`
+	IsDel          bool           `gorm:"column:isdel;default:false"`                                    //是否删除
+	UserId         sql.NullString `gorm:"unique;unique_index;not null"`                                  //不重复id
+	InvitePerson   int            `gorm:"default:'6666'" json:"invitePerson"`                            //邀请人id某人为空
+	ProfilePicture string         `gorm:"default:'http://cdn.tlapp.club/pet.png'" json:"profilePicture"` //头像地址
 }
 
 //自定义表名-默认是结构体名称+s
-func (User)TableName()string{
+func (User) TableName() string {
 	return "User"
 }
 
 type PetDetail struct {
 	//宠物资料详细表
-	ID int `gorm:"autoIncrement;primaryKey"`
-	PetMaster int //宠物主人的id
-	PetName string
-	PetCall string //联系方式
-	Petdetail string //宠物详细介绍
-	PetClass string //宠物类型
-	PetBuyer int //买主id 默认为空
-	PetPhoto string //宠物相册
-	PetAvatotr string //宠物头像
-	PetVideo string //视频地址
-	PetMoney float64 //最初定价
-	PetBuyMoney float64 //最终售卖价
+	gorm.Model
+	PetID       int64         `grom:"not null;unique;index:pet"`
+	PetMaster   string        `gorm:"not null" json:"petMaster" binding:"required"` //宠物主人的id
+	PetName     string        `gorm:"default:'暂无昵称'" json:"pet-name" binding:"required"`
+	PetCall     string        `gorm:"default:'无'" json:"petCall"`                                                    //联系方式
+	Petdetail   string        `gorm:"default:'暂无介绍'" json:"petdetail"`                                               //宠物详细介绍
+	PetClass    string        `gorm:"not null;default:'0'" json:"petClass"`                                          //宠物类型
+	PetBuyer    sql.NullInt32 `json:"petBuyer"`                                                                      //买主id 默认为空
+	PetPhoto    string        `gorm:"default:'暂无'" json:"petPhoto"`                                                  //宠物相册
+	PetAvatotr  string        `gorm:"default:'http://cdn.tlapp.club/pet.png'" json:"pet-avatotr" binding:"required"` //宠物头像
+	PetVideo    string        `gorm:"default:'暂无'" json:"pet-video"`                                                 //视频地址
+	PetMoney    float64       `gorm:"default:'0.0'" json:"petMoney"`                                                 //最初定价
+	PetBuyMoney float64       `gorm:"default:'0.0'" json:"petBuyMoney"`                                              //最终售卖价
 }
-
-
