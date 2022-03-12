@@ -31,7 +31,7 @@ func init() {
 		//return
 	}
 	Db = dataDase
-	Db.AutoMigrate(&Models.User{}, &Models.PetDetail{})
+	Db.AutoMigrate(&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{})
 	fmt.Println("链接成功", err)
 
 }

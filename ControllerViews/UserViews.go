@@ -42,7 +42,7 @@ type Login struct {
 }
 
 func (UserController) UserPost(c *gin.Context) {
-	//用户注册
+	//用户登录
 	var formData Login
 	var Data Models.User
 	err := c.Bind(&formData)
@@ -82,6 +82,7 @@ func (UserController) UserPost(c *gin.Context) {
 }
 
 func (RegisterController) Register(c *gin.Context) {
+	//用户注册
 	value := strconv.FormatInt(rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(10000000), 10)
 	fmt.Printf("得到的随机数：%v", value)
 	NowIp := c.ClientIP()

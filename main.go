@@ -20,9 +20,10 @@ func engine() *gin.Engine {
 }
 
 func main() {
-	var MapIp = make(map[string]interface{})
+	//var MapIp = make(map[string]interface{})
 	engine()
-	Gone.Use(Middlewares.FirstCheck(MapIp), Middlewares.JWThMiddleware())
+	//Gone.Use(Middlewares.FirstCheck(MapIp), Middlewares.JWThMiddleware())
+	Gone.Use(Middlewares.JWThMiddleware())
 	Routers.Router(Gone)
 	//监听端口默认为8080
 	err := Gone.Run(":8000")
