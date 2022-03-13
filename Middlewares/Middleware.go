@@ -50,6 +50,7 @@ func JWThMiddleware() func(c *gin.Context) {
 		mc, err := ParseToken(token)
 		if err != nil {
 			// 处理 解析失败
+			fmt.Printf("解析失败：%v\n", err.Error())
 			c.Abort()
 			return
 		}

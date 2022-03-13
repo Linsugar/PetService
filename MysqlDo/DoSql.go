@@ -31,7 +31,9 @@ func init() {
 		//return
 	}
 	Db = dataDase
-	Db.AutoMigrate(&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{})
+	var ModelsArrary = []interface{}{&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{}, &Models.Article{}}
+
+	Db.AutoMigrate(ModelsArrary...)
 	fmt.Println("链接成功", err)
 
 }
