@@ -32,14 +32,19 @@ type PetDetail struct {
 	gorm.Model
 	PetID       int64         `grom:"not null;unique;index:pet"`
 	PetMaster   string        `gorm:"not null" json:"petMaster" binding:"required" form:"petMaster"` //宠物主人的id
-	PetName     string        `gorm:"default:'暂无昵称'" json:"pet-name" binding:"required" json:"pet-name"`
+	PetName     string        `json:"pet_name" form:"pet_name" binding:"required" `
 	PetCall     string        `gorm:"default:'无'" json:"petCall" form:"petCall"`                                                        //联系方式
 	Petdetail   string        `gorm:"default:'暂无介绍'" json:"petdetail" form:"petdetail"`                                                 //宠物详细介绍
-	PetClass    string        `gorm:"not null;default:'0'" json:"petClass" form:"petMaster"`                                            //宠物类型
-	PetBuyer    sql.NullInt32 `json:"petBuyer" form:"petMaster"`                                                                        //买主id 默认为空
+	PetClass    string        `gorm:"not null;default:'0'" json:"petClass" form:"petClass"`                                             //宠物类型
+	PetBuyer    sql.NullInt32 `json:"petBuyer" form:"PetBuyer"`                                                                         //买主id 默认为空
 	PetPhoto    string        `gorm:"default:'暂无'" json:"petPhoto" form:"petPhoto"`                                                     //宠物相册
-	PetAvatotr  string        `gorm:"default:'http://cdn.tlapp.club/pet.png'" form:"pet-avatotr" json:"pet-avatotr" binding:"required"` //宠物头像
-	PetVideo    string        `gorm:"default:'暂无'" json:"pet-video" form:"pet-video"`                                                   //视频地址
+	PetAvatotr  string        `gorm:"default:'http://cdn.tlapp.club/pet.png'" form:"pet_avatotr" json:"pet_avatotr" binding:"required"` //宠物头像
+	PetVideo    string        `gorm:"default:'暂无'" json:"pet_video" form:"pet_video"`                                                   //视频地址
 	PetMoney    float64       `gorm:"default:'0.0'" json:"petMoney" form:"petMoney"`                                                    //最初定价
 	PetBuyMoney float64       `gorm:"default:'0.0'" json:"petBuyMoney" form:"petBuyMoney"`                                              //最终售卖价
+	PetContent  string        `json:"petContent" form:"petContent" binding:"required"`                                                  //最终售卖价
+	PetAge      float64       `json:"petAge" form:"petAge" binding:"required"`                                                          //最终售卖价
+	PetGender   string        `gorm:"defalut:'MALE'" json:"petGender" form:"petGender"`                                                 //最终售卖价
+	PetWeight   float32       `gorm:"default:'0.0'" json:"petWeight" form:"petWeight"`                                                  //最终售卖价
+	PetLocation string        `gorm:"defalut:'[10.0,20]'" json:"petLocation" form:"petLocation"`
 }

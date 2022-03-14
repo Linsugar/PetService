@@ -1,6 +1,10 @@
 package Untils
 
-import "github.com/gin-gonic/gin"
+import (
+	"PetService/MysqlDo"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+)
 
 func T1(ctx *gin.Context) {
 	ctx.Next() //允许下面函数的调用
@@ -8,4 +12,13 @@ func T1(ctx *gin.Context) {
 	ctx.Abort() //阻止后续的调用
 }
 
+type t1 struct {
+	gorm.Model
+	v1 string `gorm:"unique"`
+	v2 int64  `gorm:"not null"`
+	v3 map[int]string
+}
 
+func main() {
+	MysqlDo.Db.AutoMigrate(&t1{})
+}
