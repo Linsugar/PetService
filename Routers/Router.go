@@ -22,6 +22,7 @@ func Router(R *gin.Engine) {
 		V1Route.GET("/dynamic", Views.DynamicController{}.DynamicAll)
 		V1Route.POST("/dynamic", Views.DynamicController{}.DynamicPost)
 		V1Route.GET("/article", Views.ArticleController{}.ArticleAll)
+		V1Route.GET("/weixin", Views.WeiXinArticle{}.WeixinGet)
 		V1Route.POST("/article", Views.ArticleController{}.ArticlePost)
 	}
 	V2Route := R.Group("/v2")
