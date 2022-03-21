@@ -2,12 +2,11 @@ package Views
 
 import (
 	"PetService/Models"
+	"PetService/Untils"
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -75,18 +74,27 @@ func getArticle(c2 chan interface{}, c3 chan string) {
 func (WeiXinArticle) WeixinGet(c *gin.Context) {
 	var c2 = make(chan interface{}, 2)
 	var c3 = make(chan string, 2)
-	v1 := RedisSomething(c3)
-	if v1 != nil {
-		fmt.Println("错误", v1)
+	//v1 := RedisSomething(c3)
+	fmt.Println("V1===")
+	redisResult := Untils.RedisDo{}.GetRedisValue("weixin")
+	if redisResult != nil {
+		str := fmt.Sprintf("%v", redisResult)
+		err := json.Unmarshal([]byte(str), &wc)
+		if err != nil {
+			return
+		}
+		c.JSON(200, gin.H{
+			"res": "从redis获取到数据",
+			"re":  &wc,
+		})
 	} else {
-		fmt.Println("V1===", v1)
 		go getArticle(c2, c3)
+		Untils.RedisDo{}.SetRedisValue("weixin", <-c3, time.Second*50)
 		c.JSON(200, gin.H{
 			"res": "sss",
 			"re":  <-c2,
 		})
 	}
-
 	defer close(c2)
 }
 
@@ -94,14 +102,14 @@ func WeixinPost(c *gin.Context) {
 
 }
 
-func RedisSomething(c3 chan string) interface{} {
-	//redis 操作
-	conn := redis.NewClient(&redis.Options{Addr: "139.155.88.241:6379"})
-	ctx := context.Background()
-	conn.Set(ctx, "weixin", <-c3, time.Second*50)
-	value := conn.Get(ctx, "weixin")
-	fmt.Printf("当前redis:返回的数据：…%v", value)
-	defer close(c3)
-	return value
-
-}
+//func RedisSomething(c3 chan string) interface{} {
+//	//redis 操作
+//	conn := redis.NewClient(&redis.Options{Addr: "139.155.88.241:6379"})
+//	ctx := context.Background()
+//	conn.Set(ctx, "weixin", <-c3, time.Second*50)
+//	value := conn.Get(ctx, "weixin")
+//	fmt.Printf("当前redis:返回的数据：…%v", value)
+//	defer close(c3)
+//	return value
+//
+//}
