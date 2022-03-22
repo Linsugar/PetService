@@ -12,9 +12,18 @@ import (
 	"time"
 )
 
+var (
+	c2 = make(chan interface{}, 2)
+	c3 = make(chan string, 2)
+)
+
 type WeiXinArticle struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
+}
+
+func (WeiXinArticle) Run() {
+	getArticle(c2, c3)
 }
 
 var wc Models.T2
@@ -41,7 +50,7 @@ func getArticle(c2 chan interface{}, c3 chan string) {
 	var c1 = make(chan string, 2)
 	getToken(c1)
 	arr := map[string]interface{}{
-		"type": "news", "offset": 0, "count": 1,
+		"type": "news", "offset": 0, "count": 2,
 	}
 	url2 := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=%v", <-c1)
 	jsonStr, _ := json.Marshal(arr)
@@ -50,10 +59,8 @@ func getArticle(c2 chan interface{}, c3 chan string) {
 		fmt.Printf("当前错误：%v\n", err2)
 		return
 	}
-
 	body2, _ := ioutil.ReadAll(post.Body)
 	value2 := body2
-
 	err4 := json.Unmarshal(value2, &wc)
 	marshal, err := json.Marshal(&wc)
 	if err != nil {
@@ -72,9 +79,7 @@ func getArticle(c2 chan interface{}, c3 chan string) {
 }
 
 func (WeiXinArticle) WeixinGet(c *gin.Context) {
-	var c2 = make(chan interface{}, 2)
-	var c3 = make(chan string, 2)
-	//v1 := RedisSomething(c3)
+
 	fmt.Println("V1===")
 	redisResult := Untils.RedisDo{}.GetRedisValue("weixin")
 	if redisResult != nil {
@@ -95,21 +100,9 @@ func (WeiXinArticle) WeixinGet(c *gin.Context) {
 			"re":  <-c2,
 		})
 	}
-	defer close(c2)
+	//defer close(c2)
 }
 
 func WeixinPost(c *gin.Context) {
 
 }
-
-//func RedisSomething(c3 chan string) interface{} {
-//	//redis 操作
-//	conn := redis.NewClient(&redis.Options{Addr: "139.155.88.241:6379"})
-//	ctx := context.Background()
-//	conn.Set(ctx, "weixin", <-c3, time.Second*50)
-//	value := conn.Get(ctx, "weixin")
-//	fmt.Printf("当前redis:返回的数据：…%v", value)
-//	defer close(c3)
-//	return value
-//
-//}

@@ -1,9 +1,11 @@
 package main
 
 import (
+	Views "PetService/ControllerViews"
 	"PetService/Middlewares"
 	"PetService/MysqlDo"
 	"PetService/Routers"
+	"PetService/Untils"
 	"github.com/gin-gonic/gin"
 	"sync"
 )
@@ -30,4 +32,6 @@ func main() {
 		return
 	}
 	defer MysqlDo.Db.Close()
+	//每天凌晨1点执行一次
+	Untils.Cr.AddJob("0 0 1 * * ?", Views.WeiXinArticle{})
 }
