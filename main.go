@@ -2,7 +2,6 @@ package main
 
 import (
 	"PetService/Conf"
-	Views "PetService/ControllerViews"
 	"PetService/Middlewares"
 	"PetService/Routers"
 	"PetService/Untils"
@@ -28,10 +27,12 @@ func main() {
 	Routers.Router(Gone)
 	//监听端口默认为8080
 	err := Gone.Run(":8000")
+
 	if err != nil {
 		return
 	}
 	defer Conf.Db.Close()
+	Untils.Cr.Start()
 	//每天凌晨1点执行一次
-	Untils.Cr.AddJob("0 0 1 * * ?", Views.WeiXinArticle{})
+
 }

@@ -22,10 +22,6 @@ type WeiXinArticle struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func (WeiXinArticle) Run() {
-	getArticle(c2, c3)
-}
-
 var wc Models.T2
 
 func getToken(c1 chan string) {
@@ -46,7 +42,7 @@ func getToken(c1 chan string) {
 	}
 }
 
-func getArticle(c2 chan interface{}, c3 chan string) {
+func GetArticle() {
 	var c1 = make(chan string, 2)
 	getToken(c1)
 	arr := map[string]interface{}{
@@ -93,8 +89,8 @@ func (WeiXinArticle) WeixinGet(c *gin.Context) {
 			"re":  &wc,
 		})
 	} else {
-		go getArticle(c2, c3)
-		Untils.RedisDo{}.SetRedisValue("weixin", <-c3, time.Second*50)
+		go GetArticle()
+		Untils.RedisDo{}.SetRedisValue("weixin", <-c3, time.Minute*60*24)
 		c.JSON(200, gin.H{
 			"res": "sss",
 			"re":  <-c2,
