@@ -1,8 +1,8 @@
 package Views
 
 import (
+	"PetService/Conf"
 	"PetService/Models"
-	"PetService/MysqlDo"
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -26,7 +26,7 @@ type Dynamic struct {
 func (DynamicController) DynamicAll(c *gin.Context) {
 	//获取所有的动态信息
 	var allDyadic []Models.Dynamics
-	err := MysqlDo.Db.Model(&Models.Dynamics{}).Find(&allDyadic).Error
+	err := Conf.Db.Model(&Models.Dynamics{}).Find(&allDyadic).Error
 	if err != nil {
 		c.JSON(http.StatusGone, gin.H{
 			"msg":    "请稍后再试",
@@ -60,7 +60,7 @@ func (DynamicController) DynamicPost(c *gin.Context) {
 	bindData.AuthorID = sql.NullInt64{Int64: Data.AuthorID, Valid: true}
 	bindData.DynamicText = sql.NullString{String: Data.DynamicText, Valid: true}
 	bindData.DynamicImages = Data.DynamicImages
-	ers := MysqlDo.Db.Transaction(func(tx *gorm.DB) error {
+	ers := Conf.Db.Transaction(func(tx *gorm.DB) error {
 		if e1 := tx.Where("user_id=?", &Data.AuthorID).First(&Models.User{}).Error; e1 != nil {
 			return e1
 		}

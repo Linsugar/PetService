@@ -1,8 +1,8 @@
 package Views
 
 import (
+	"PetService/Conf"
 	"PetService/Models"
-	"PetService/MysqlDo"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -20,7 +20,7 @@ type ArticleController struct {
 func (ArticleController) ArticleAll(c *gin.Context) {
 	fmt.Println("进入")
 	var Article []Models.Article
-	if err := MysqlDo.Db.Model(&Models.Article{}).Find(&Article).Error; err != nil {
+	if err := Conf.Db.Model(&Models.Article{}).Find(&Article).Error; err != nil {
 		c.JSON(400, gin.H{
 			"msg": "请求错误",
 			"err": err.Error(),
@@ -42,11 +42,11 @@ func (ArticleController) ArticlePost(c *gin.Context) {
 		fmt.Println("绑定有误")
 		panic(errs)
 	}
-	err := MysqlDo.Db.Transaction(func(tx *gorm.DB) error {
+	err := Conf.Db.Transaction(func(tx *gorm.DB) error {
 		if e1 := tx.Where("user_id=?", FormData.ArticleAuthor).Find(&Models.User{}).Error; e1 != nil {
 			return e1
 		}
-		if e2 := MysqlDo.Db.Model(&Models.Article{}).Create(&FormData).Error; e2 != nil {
+		if e2 := Conf.Db.Model(&Models.Article{}).Create(&FormData).Error; e2 != nil {
 			return e2
 		}
 		return nil

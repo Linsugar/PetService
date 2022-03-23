@@ -1,6 +1,7 @@
 package Untils
 
 import (
+	"PetService/Conf"
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
@@ -15,7 +16,7 @@ var Ctx = context.Background()
 
 func init() {
 	opt := redis.Options{
-		Addr: "139.155.88.241:6379",
+		Addr: Conf.Addr,
 	}
 	Conn = redis.NewClient(&opt)
 }

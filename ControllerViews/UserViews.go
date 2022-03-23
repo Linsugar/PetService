@@ -1,9 +1,9 @@
 package Views
 
 import (
+	"PetService/Conf"
 	"PetService/Middlewares"
 	"PetService/Models"
-	"PetService/MysqlDo"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func (UserController) UserGet(c *gin.Context) {
 	NowIp := c.ClientIP()
 	fmt.Printf("得到的访问ip：%v", NowIp)
 	var us []Models.User
-	MysqlDo.Db.Model(&Models.User{}).Find(&us)
+	Conf.Db.Model(&Models.User{}).Find(&us)
 	c.JSON(200, gin.H{
 		"msg":    "返回成功",
 		"result": us,
@@ -54,7 +54,7 @@ func (UserController) UserPost(c *gin.Context) {
 		})
 		return
 	}
-	err3 := MysqlDo.Db.Transaction(func(tx *gorm.DB) error {
+	err3 := Conf.Db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Model(&Models.User{}).Where("phone =? and password=?", formData.Phone, formData.Password).First(&Data).Error; err != nil {
 			return err
 		}
@@ -101,7 +101,7 @@ func (RegisterController) Register(c *gin.Context) {
 		String: value,
 		Valid:  true,
 	}
-	Err := MysqlDo.Db.Transaction(func(tx *gorm.DB) error {
+	Err := Conf.Db.Transaction(func(tx *gorm.DB) error {
 		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
 		if err := tx.Model(&Models.User{}).Create(&Register).Error; err != nil {
 			// 返回任何错误都会回滚事务

@@ -1,8 +1,8 @@
 package Views
 
 import (
+	"PetService/Conf"
 	"PetService/Models"
-	"PetService/MysqlDo"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"math/rand"
@@ -16,7 +16,7 @@ type PetController struct {
 func (PetController) PetGet(c *gin.Context) {
 	//查询宠物
 	var PetList []Models.PetDetail
-	MysqlDo.Db.Model(&Models.PetDetail{}).Find(&PetList)
+	Conf.Db.Model(&Models.PetDetail{}).Find(&PetList)
 	c.JSON(200, gin.H{
 		"1":   "sss",
 		"res": PetList,
@@ -35,7 +35,7 @@ func (PetController) PetPost(c *gin.Context) {
 		})
 		return
 	}
-	res := MysqlDo.Db.Transaction(func(tx *gorm.DB) error {
+	res := Conf.Db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Model(&Models.User{}).Where("user_id=?", Pet.PetMaster).Find(&Models.User{}).Error; err != nil {
 			return err
 		}

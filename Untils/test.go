@@ -1,7 +1,7 @@
 package Untils
 
 import (
-	"PetService/MysqlDo"
+	"PetService/Conf"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -20,5 +20,5 @@ type t1 struct {
 }
 
 func main() {
-	MysqlDo.Db.AutoMigrate(&t1{})
+	Conf.Db.AutoMigrate(&t1{})
 }
