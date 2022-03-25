@@ -22,6 +22,7 @@ var Cr *cron.Cron
 
 func init() {
 	Cr = cron.New()
+	//这里会出现循环掉包的问题-已经
 	Cr.Start()
 	TaskInitAll()
 }
@@ -56,7 +57,7 @@ func GetArticle() {
 	var wc Models.T2
 	getToken()
 	arr := map[string]interface{}{
-		"type": "news", "offset": 0, "count": 2,
+		"type": "news", "offset": 0, "count": 10,
 	}
 	url2 := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=%v", <-ChanToken)
 	jsonStr, _ := json.Marshal(arr)

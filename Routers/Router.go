@@ -36,10 +36,7 @@ func Router() {
 	}
 	V2Route := R.Group("/v2")
 	{
-		V2Route.GET("/user", Views.UserGet)
-		V2Route.POST("/user", Views.UserPost)
-		V2Route.GET("/pet", Views.PetGet)
-		V2Route.POST("/pet", Views.PetPost)
+		V2Route.POST("/QiNiu", Views.SetQINiuToken)
 	}
 
 }

@@ -15,7 +15,6 @@ func main() {
 	////Gone.Use(Middlewares.FirstCheck(MapIp), Middlewares.JWThMiddleware())
 	//Gone.Use(Middlewares.JWThMiddleware())
 	//监听端口默认为8080
-
 	err := Routers.Gone.Run(":8000")
 	if err != nil {
 		return

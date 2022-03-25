@@ -19,6 +19,8 @@ var (
 	Appid        string
 	OpenConns    int
 	MaxIdleConns int
+	AccessKey    string
+	SecretKey    string
 )
 
 func init() {
@@ -56,4 +58,9 @@ func LoadRedis(file *ini.File) {
 func LoadWeiXinKey(file *ini.File) {
 	Appid = file.Section("WeiXinKey").Key("Appid").String()
 	Secret = file.Section("WeiXinKey").Key("Secret").String()
+}
+
+func LoadQiNiuKey(file *ini.File) {
+	AccessKey = file.Section("QiNiu").Key("AccessKey").String()
+	SecretKey = file.Section("QiNiu").Key("SecretKey").String()
 }
