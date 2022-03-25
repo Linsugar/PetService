@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"math/rand"
-	"net/http"
 	"strconv"
 	"time"
 )
@@ -25,15 +24,9 @@ func DynamicAll(c *gin.Context) {
 	var allDyadic []Models.Dynamics
 	err := Untils.Db.Model(&Models.Dynamics{}).Find(&allDyadic).Error
 	if err != nil {
-		c.JSON(http.StatusGone, gin.H{
-			"msg":    "请稍后再试",
-			"result": err,
-		})
+		Untils.ResponseBadState(c, err)
 	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"msg":    "获取成功",
-			"result": allDyadic,
-		})
+		Untils.ResponseOkState(c, allDyadic)
 	}
 
 }
@@ -47,9 +40,7 @@ func DynamicPost(c *gin.Context) {
 
 	err := c.Bind(&Data)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"res": err,
-		})
+		Untils.ResponseBadState(c, err)
 		return
 	}
 	bindData.DynamicIp = c.ClientIP()
@@ -67,15 +58,9 @@ func DynamicPost(c *gin.Context) {
 		return nil
 	})
 	if ers != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"res": ers.Error(),
-			"msg": "参数有误",
-		})
+		Untils.ResponseBadState(c, ers)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"res": bindData,
-		"msg": "提交成功",
-	})
+	Untils.ResponseOkState(c, bindData)
 
 }

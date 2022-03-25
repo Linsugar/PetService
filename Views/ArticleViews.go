@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 //type Article interface {
@@ -21,17 +20,11 @@ func ArticleAll(c *gin.Context) {
 	fmt.Println("进入")
 	var Article []Models.Article
 	if err := Untils.Db.Model(&Models.Article{}).Find(&Article).Error; err != nil {
-		c.JSON(400, gin.H{
-			"msg": "请求错误",
-			"err": err.Error(),
-		})
+		Untils.ResponseBadState(c, err)
+
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"result": &Article,
-		"msg":    "请求成功",
-	})
-
+	Untils.ResponseOkState(c, Article)
 }
 
 func ArticlePost(c *gin.Context) {
@@ -39,8 +32,7 @@ func ArticlePost(c *gin.Context) {
 	errs := c.Bind(&FormData)
 	fmt.Println("绑定有误:", errs)
 	if errs != nil {
-		fmt.Println("绑定有误")
-		panic(errs)
+		Untils.ResponseBadState(c, errs)
 	}
 	err := Untils.Db.Transaction(func(tx *gorm.DB) error {
 		if e1 := tx.Where("user_id=?", FormData.ArticleAuthor).Find(&Models.User{}).Error; e1 != nil {
@@ -52,14 +44,9 @@ func ArticlePost(c *gin.Context) {
 		return nil
 	})
 	if err != nil {
-		c.JSON(400, gin.H{
-			"msg":    "参数有误",
-			"result": err.Error(),
-		})
+		Untils.ResponseBadState(c, err)
 		return
 	}
-	c.JSON(200, gin.H{
-		"msg":    "发布成功",
-		"result": FormData,
-	})
+
+	Untils.ResponseOkState(c, FormData)
 }

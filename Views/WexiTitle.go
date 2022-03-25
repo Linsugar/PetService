@@ -20,19 +20,13 @@ func WeixinGet(c *gin.Context) {
 		if err != nil {
 			return
 		}
-		c.JSON(200, gin.H{
-			"res": "从redis获取到数据",
-			"re":  &wc,
-		})
+		Untils.ResponseOkState(c, &wc)
 	} else {
 		Tasks.GetArticle()
 		//fmt.Printf("当前返回的值1：%v\n", <-Tasks.JsonArticle)
 		Untils.SetRedisValue("weixin", <-Tasks.StringArticle, time.Second*100)
 		//fmt.Printf("当前返回的值2：%v\n", <-Tasks.JsonArticle)
-		c.JSON(200, gin.H{
-			"res": "sss",
-			"re":  <-Tasks.JsonArticle,
-		})
+		Untils.ResponseOkState(c, <-Tasks.JsonArticle)
 	}
 	//defer close(c2)
 }

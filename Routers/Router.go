@@ -1,8 +1,8 @@
 package Routers
 
 import (
-	Views "PetService/Views"
-	docs "PetService/docs"
+	"PetService/Views"
+	"PetService/docs"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"

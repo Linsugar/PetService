@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"math/rand"
-	"net/http"
 	"strconv"
 	"time"
 )
@@ -34,11 +33,11 @@ func UserGet(c *gin.Context) {
 	NowIp := c.ClientIP()
 	fmt.Printf("得到的访问ip：%v", NowIp)
 	var us []Models.User
-	Untils.Db.Model(&Models.User{}).Find(&us)
-	c.JSON(200, gin.H{
-		"msg":    "返回成功",
-		"result": us,
-	})
+	err := Untils.Db.Model(&Models.User{}).Find(&us).Error
+	if err != nil {
+		Untils.ResponseBadState(c, err)
+	}
+	Untils.ResponseOkState(c, us)
 }
 
 type Login struct {
@@ -68,10 +67,7 @@ func UserPost(c *gin.Context) {
 	err := c.Bind(&formData)
 	formData.Nowip = c.ClientIP()
 	if err != nil {
-		c.JSON(400, gin.H{
-			"msg": formData,
-			"err": err.Error(),
-		})
+		Untils.ResponseBadState(c, err)
 		return
 	}
 	err3 := Untils.Db.Transaction(func(tx *gorm.DB) error {
@@ -89,16 +85,10 @@ func UserPost(c *gin.Context) {
 
 	})
 	if err3 != nil {
-		c.JSON(http.StatusConflict, gin.H{
-			"ms":  "请确认是否有误",
-			"res": err3.Error(),
-		})
+		Untils.ResponseBadState(c, err3)
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{
-		"result": Data,
-	})
-
+	Untils.ResponseOkState(c, Data)
 }
 
 // @Description 关于用户注册
@@ -119,9 +109,7 @@ func Register(c *gin.Context) {
 	var Register Models.User
 	err := c.Bind(&Register)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"result": err.Error(),
-		})
+		Untils.ResponseBadState(c, err)
 		return
 	}
 	Register.NowIp = NowIp
@@ -147,14 +135,9 @@ func Register(c *gin.Context) {
 		return nil
 	})
 	if Err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "请检查您的信息重新注册",
-		})
+		Untils.ResponseBadState(c, Err)
 	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"msg":   "注册成功",
-			"token": value,
-		})
+		Untils.ResponseOkState(c, value)
 	}
 	//result := MysqlDo.Db.Model(Models.User{}).Create(&Register).GetErrors()
 

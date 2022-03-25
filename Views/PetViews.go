@@ -6,18 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"math/rand"
-	"net/http"
 	"time"
 )
 
 func PetGet(c *gin.Context) {
 	//查询宠物
 	var PetList []Models.PetDetail
-	Untils.Db.Model(&Models.PetDetail{}).Find(&PetList)
-	c.JSON(200, gin.H{
-		"1":   "sss",
-		"res": PetList,
-	})
+	err := Untils.Db.Model(&Models.PetDetail{}).Find(&PetList).Error
+	if err != nil {
+		Untils.ResponseBadState(c, err)
+	} else {
+		Untils.ResponseOkState(c, PetList)
+	}
 }
 
 func PetPost(c *gin.Context) {
@@ -26,10 +26,7 @@ func PetPost(c *gin.Context) {
 	Pet := Models.PetDetail{}
 	err := c.Bind(&Pet)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"res": "添加失败",
-			"err": err.Error(),
-		})
+		Untils.ResponseBadState(c, err)
 		return
 	}
 	res := Untils.Db.Transaction(func(tx *gorm.DB) error {
@@ -46,15 +43,9 @@ func PetPost(c *gin.Context) {
 		return nil
 	})
 	if res != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"res": "添加失败",
-			"err": res.Error(),
-		})
+		Untils.ResponseBadState(c, res)
 	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "添加成功",
-			"res": Pet,
-		})
+		Untils.ResponseOkState(c, Pet)
 	}
 
 }
