@@ -9,8 +9,8 @@ type User struct {
 	//用户信息表
 	gorm.Model
 	Username       string `gorm:"not null" json:"username" binding:"required"`
-	Password       string `json:"password" binding:"required"`
-	Phone          string `gorm:"unique;index:phone" json:"phone" binding:"required"`
+	Password       string `json:"password" binding:"required" form:"password"`
+	Phone          string `gorm:"unique;index:phone" json:"phone" binding:"required" form:"password"`
 	CreateCity     string `gorm:"default:'成都'" json:"create_city" form:"create_city"`
 	CreateAddress  string `gorm:"default:'成都高新区'"`
 	InitIp         string

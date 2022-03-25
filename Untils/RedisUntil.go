@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-type RedisDo struct {
-}
-
 var Conn *redis.Client
 var Ctx = context.Background()
 
@@ -21,7 +18,7 @@ func init() {
 	Conn = redis.NewClient(&opt)
 }
 
-func (RedisDo) GetRedisValue(key string) interface{} {
+func GetRedisValue(key string) interface{} {
 	//根据key获取值
 	res := Conn.Get(Ctx, key)
 	value, err := res.Result()
@@ -37,7 +34,7 @@ func (RedisDo) GetRedisValue(key string) interface{} {
 	return value
 }
 
-func (RedisDo) SetRedisValue(key string, value interface{}, t time.Duration) {
+func SetRedisValue(key string, value interface{}, t time.Duration) {
 	//根据key设置值
 	res := Conn.Set(Ctx, key, value, t)
 	fmt.Println("当前Set返回值：res===", res)

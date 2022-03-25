@@ -1,10 +1,8 @@
 package Conf
 
 import (
-	"PetService/Models"
 	"fmt"
 	"github.com/go-ini/ini"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
@@ -16,7 +14,8 @@ var (
 	PassWord string
 	CharSet  string
 	Addr     string
-	Db       *gorm.DB
+	Secret   string
+	Appid    string
 )
 
 func init() {
@@ -27,6 +26,7 @@ func init() {
 	}
 	LoadMySql(load)
 	LoadRedis(load)
+	LoadWeiXinKey(load)
 }
 
 func LoadMySql(file *ini.File) {
@@ -37,20 +37,6 @@ func LoadMySql(file *ini.File) {
 	UserName = file.Section("MySql").Key("UserName").String()
 	PassWord = file.Section("MySql").Key("PassWord").String()
 	CharSet = file.Section("MySql").Key("CharSet").String()
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=true", UserName, PassWord, Host, Port, Database, CharSet)
-	dataDase, err := gorm.Open("mysql", dsn)
-	if err != nil {
-		fmt.Println("有误", err)
-		panic(err)
-
-		//return
-	}
-	Db = dataDase
-	var ModelsArrary = []interface{}{&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{}, &Models.Article{}}
-
-	Db.AutoMigrate(ModelsArrary...)
-	fmt.Println("链接成功", err)
-
 }
 
 func LoadRedis(file *ini.File) {
@@ -60,4 +46,9 @@ func LoadRedis(file *ini.File) {
 		return
 	}
 	Addr = key.String()
+}
+
+func LoadWeiXinKey(file *ini.File) {
+	Appid = file.Section("WeiXinKey").Key("Appid").String()
+	Secret = file.Section("WeiXinKey").Key("Secret").String()
 }

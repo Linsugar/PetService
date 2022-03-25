@@ -1,8 +1,8 @@
 package Views
 
 import (
-	"PetService/Conf"
 	"PetService/Models"
+	"PetService/Untils"
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -12,9 +12,6 @@ import (
 	"time"
 )
 
-type DynamicController struct {
-}
-
 type Dynamic struct {
 	//必须大写
 	AuthorID      int64  `gorm:"not null" json:"author_id" binding:"required" form:"author_id"`
@@ -23,10 +20,10 @@ type Dynamic struct {
 	DynamicIp     string `json:"dynamicIp" form:"dynamic_ip"`
 }
 
-func (DynamicController) DynamicAll(c *gin.Context) {
+func DynamicAll(c *gin.Context) {
 	//获取所有的动态信息
 	var allDyadic []Models.Dynamics
-	err := Conf.Db.Model(&Models.Dynamics{}).Find(&allDyadic).Error
+	err := Untils.Db.Model(&Models.Dynamics{}).Find(&allDyadic).Error
 	if err != nil {
 		c.JSON(http.StatusGone, gin.H{
 			"msg":    "请稍后再试",
@@ -41,7 +38,7 @@ func (DynamicController) DynamicAll(c *gin.Context) {
 
 }
 
-func (DynamicController) DynamicPost(c *gin.Context) {
+func DynamicPost(c *gin.Context) {
 	//发布动态
 	var bindData Models.Dynamics
 	var Data Dynamic
@@ -60,7 +57,7 @@ func (DynamicController) DynamicPost(c *gin.Context) {
 	bindData.AuthorID = sql.NullInt64{Int64: Data.AuthorID, Valid: true}
 	bindData.DynamicText = sql.NullString{String: Data.DynamicText, Valid: true}
 	bindData.DynamicImages = Data.DynamicImages
-	ers := Conf.Db.Transaction(func(tx *gorm.DB) error {
+	ers := Untils.Db.Transaction(func(tx *gorm.DB) error {
 		if e1 := tx.Where("user_id=?", &Data.AuthorID).First(&Models.User{}).Error; e1 != nil {
 			return e1
 		}

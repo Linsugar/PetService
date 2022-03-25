@@ -1,9 +1,9 @@
 package Views
 
 import (
-	"PetService/Conf"
 	"PetService/Middlewares"
 	"PetService/Models"
+	"PetService/Untils"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -20,12 +20,21 @@ type UserController struct {
 type RegisterController struct {
 }
 
-func (UserController) UserGet(c *gin.Context) {
+// PingExample godoc
+// @Summary 用户登录
+// @Schemes
+// @Description 专门用户获取所用用户列表的
+// @Tags 获取用户列表
+// @Accept x-www-form-urlencoded
+// @Produce x-www-form-urlencoded
+// @Success 200 {string} test1
+// @Router /user [get]
+func UserGet(c *gin.Context) {
 	//获取所有的用户列表
 	NowIp := c.ClientIP()
 	fmt.Printf("得到的访问ip：%v", NowIp)
 	var us []Models.User
-	Conf.Db.Model(&Models.User{}).Find(&us)
+	Untils.Db.Model(&Models.User{}).Find(&us)
 	c.JSON(200, gin.H{
 		"msg":    "返回成功",
 		"result": us,
@@ -41,7 +50,18 @@ type Login struct {
 	Nowip string `form:"nowip" json:"nowip"`
 }
 
-func (UserController) UserPost(c *gin.Context) {
+// PingExample godoc
+// @Summary 用户登录
+// @Schemes
+// @Description 对于用户进行登录
+// @Tags 登录
+// @Accept x-www-form-urlencoded
+// @Produce x-www-form-urlencoded
+// @Param phone formData  string true "用户手机号"
+// @Param password formData   string true "用户密码"
+// @Success 200 {string} test2
+// @Router /user [post]
+func UserPost(c *gin.Context) {
 	//用户登录
 	var formData Login
 	var Data Models.User
@@ -54,7 +74,7 @@ func (UserController) UserPost(c *gin.Context) {
 		})
 		return
 	}
-	err3 := Conf.Db.Transaction(func(tx *gorm.DB) error {
+	err3 := Untils.Db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Model(&Models.User{}).Where("phone =? and password=?", formData.Phone, formData.Password).First(&Data).Error; err != nil {
 			return err
 		}
@@ -81,7 +101,16 @@ func (UserController) UserPost(c *gin.Context) {
 
 }
 
-func (RegisterController) Register(c *gin.Context) {
+// @Description 关于用户注册
+// @Tags 注册
+// @Accept x-www-form-urlencoded
+// @Produce x-www-form-urlencoded
+// @Param Phone formData  string true "用户手机号"
+// @Param Password formData   string true "用户密码"
+// @Param Username formData  string true "用户账户名"
+// @Success 200 {string} hello
+// @Router /register [post]
+func Register(c *gin.Context) {
 	//用户注册
 	value := strconv.FormatInt(rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(10000000), 10)
 	fmt.Printf("得到的随机数：%v", value)
@@ -101,7 +130,7 @@ func (RegisterController) Register(c *gin.Context) {
 		String: value,
 		Valid:  true,
 	}
-	Err := Conf.Db.Transaction(func(tx *gorm.DB) error {
+	Err := Untils.Db.Transaction(func(tx *gorm.DB) error {
 		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
 		if err := tx.Model(&Models.User{}).Create(&Register).Error; err != nil {
 			// 返回任何错误都会回滚事务
@@ -119,7 +148,7 @@ func (RegisterController) Register(c *gin.Context) {
 	})
 	if Err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"msg": Err,
+			"msg": "请检查您的信息重新注册",
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{

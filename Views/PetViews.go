@@ -1,8 +1,8 @@
 package Views
 
 import (
-	"PetService/Conf"
 	"PetService/Models"
+	"PetService/Untils"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"math/rand"
@@ -10,20 +10,17 @@ import (
 	"time"
 )
 
-type PetController struct {
-}
-
-func (PetController) PetGet(c *gin.Context) {
+func PetGet(c *gin.Context) {
 	//查询宠物
 	var PetList []Models.PetDetail
-	Conf.Db.Model(&Models.PetDetail{}).Find(&PetList)
+	Untils.Db.Model(&Models.PetDetail{}).Find(&PetList)
 	c.JSON(200, gin.H{
 		"1":   "sss",
 		"res": PetList,
 	})
 }
 
-func (PetController) PetPost(c *gin.Context) {
+func PetPost(c *gin.Context) {
 	//新增宠物
 	petId := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(10000000)
 	Pet := Models.PetDetail{}
@@ -35,7 +32,7 @@ func (PetController) PetPost(c *gin.Context) {
 		})
 		return
 	}
-	res := Conf.Db.Transaction(func(tx *gorm.DB) error {
+	res := Untils.Db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Model(&Models.User{}).Where("user_id=?", Pet.PetMaster).Find(&Models.User{}).Error; err != nil {
 			return err
 		}
