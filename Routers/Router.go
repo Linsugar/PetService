@@ -27,16 +27,12 @@ func Router() {
 	docs.SwaggerInfo.BasePath = "/v1"
 	R.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	{
-		V1Route.GET("/user", Views.UserGet)
-		V1Route.POST("/user", Views.UserPost)
-		V1Route.GET("/pet", Views.PetGet)
-		V1Route.POST("/pet", Views.PetPost)
-		V1Route.POST("/register", Views.Register)
-		V1Route.GET("/dynamic", Views.DynamicAll)
-		V1Route.POST("/dynamic", Views.DynamicPost)
-		V1Route.GET("/article", Views.ArticleAll)
+		V1Route.Any("/user", Views.UserController)
+		V1Route.Any("/pet", Views.PetController)
+		V1Route.Any("/dynamic", Views.DynamicController)
+		V1Route.Any("/article", Views.ArticleController)
 		V1Route.GET("/weixin", Views.WeixinGet)
-		V1Route.POST("/article", Views.ArticlePost)
+		V1Route.POST("/register", Views.Register)
 	}
 	V2Route := R.Group("/v2")
 	{

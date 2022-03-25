@@ -9,6 +9,14 @@ import (
 	"time"
 )
 
+func PetController(c *gin.Context) {
+	if c.Request.Method == "POST" {
+		PetPost(c)
+	} else if c.Request.Method == "GET" {
+		PetGet(c)
+	}
+}
+
 func PetGet(c *gin.Context) {
 	//查询宠物
 	var PetList []Models.PetDetail

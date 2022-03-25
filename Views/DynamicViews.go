@@ -19,6 +19,14 @@ type Dynamic struct {
 	DynamicIp     string `json:"dynamicIp" form:"dynamic_ip"`
 }
 
+func DynamicController(c *gin.Context) {
+	if c.Request.Method == "POST" {
+		DynamicPost(c)
+	} else if c.Request.Method == "GET" {
+		DynamicAll(c)
+	}
+}
+
 func DynamicAll(c *gin.Context) {
 	//获取所有的动态信息
 	var allDyadic []Models.Dynamics

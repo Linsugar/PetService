@@ -13,6 +13,14 @@ import (
 	"time"
 )
 
+func UserController(c *gin.Context) {
+	if c.Request.Method == "POST" {
+		UserPost(c)
+	} else if c.Request.Method == "GET" {
+		UserGet(c)
+	}
+}
+
 // PingExample godoc
 // @Summary 用户登录
 // @Schemes

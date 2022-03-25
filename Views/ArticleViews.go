@@ -13,7 +13,13 @@ import (
 //}
 
 //文章控制器
-type ArticleController struct {
+
+func ArticleController(c *gin.Context) {
+	if c.Request.Method == "POST" {
+		ArticlePost(c)
+	} else if c.Request.Method == "GET" {
+		ArticleAll(c)
+	}
 }
 
 func ArticleAll(c *gin.Context) {
