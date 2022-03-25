@@ -5,6 +5,7 @@ import (
 	"PetService/Models"
 	"fmt"
 	"github.com/jinzhu/gorm"
+	"time"
 )
 
 var Db *gorm.DB
@@ -18,6 +19,12 @@ func init() {
 
 		//return
 	}
+	sqlDB := dataDase.DB()
+	sqlDB.SetMaxIdleConns(Conf.MaxIdleConns)
+	// SetMaxOpenConns 设置打开数据库连接的最大数量。
+	sqlDB.SetMaxOpenConns(Conf.OpenConns)
+	// SetConnMaxLifetime 设置了连接可复用的最大时间。
+	sqlDB.SetConnMaxLifetime(time.Hour)
 	Db = dataDase
 	var ModelsArrary = []interface{}{&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{}, &Models.Article{}}
 

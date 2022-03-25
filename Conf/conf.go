@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"github.com/go-ini/ini"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"strconv"
 )
 
 var (
-	Host     string
-	Port     string
-	Database string
-	UserName string
-	PassWord string
-	CharSet  string
-	Addr     string
-	Secret   string
-	Appid    string
+	Host         string
+	Port         string
+	Database     string
+	UserName     string
+	PassWord     string
+	CharSet      string
+	Addr         string
+	Secret       string
+	Appid        string
+	OpenConns    int
+	MaxIdleConns int
 )
 
 func init() {
@@ -37,6 +40,8 @@ func LoadMySql(file *ini.File) {
 	UserName = file.Section("MySql").Key("UserName").String()
 	PassWord = file.Section("MySql").Key("PassWord").String()
 	CharSet = file.Section("MySql").Key("CharSet").String()
+	OpenConns, _ = strconv.Atoi(file.Section("Mysql").Key("OpenConns").String())
+	MaxIdleConns, _ = strconv.Atoi(file.Section("Mysql").Key("MaxIdleConns").String())
 }
 
 func LoadRedis(file *ini.File) {
