@@ -19,10 +19,10 @@
 8.通过ini文件进行的配置
 
 9.路由实现单例-避免重复创建
+![image](https://user-images.githubusercontent.com/51956983/160052582-93d638cf-bb77-45fa-b049-e37851b66d2e.png)
+
 
 10.增加定时任务合集-Cron
-
-![image](https://user-images.githubusercontent.com/51956983/160050079-6a95ce97-21a3-4775-b37b-789be4859746.png)
 
 # 集成swagger：
 集成swagger-每次进行修改时需要swag init进行更新
