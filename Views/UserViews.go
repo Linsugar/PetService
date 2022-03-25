@@ -13,12 +13,6 @@ import (
 	"time"
 )
 
-type UserController struct {
-}
-
-type RegisterController struct {
-}
-
 // PingExample godoc
 // @Summary 用户登录
 // @Schemes

@@ -22,8 +22,8 @@ var Cr *cron.Cron
 
 func init() {
 	Cr = cron.New()
-	//这里会出现循环掉包的问题
 	Cr.Start()
+	TaskInitAll()
 }
 
 func TaskInitAll() {
