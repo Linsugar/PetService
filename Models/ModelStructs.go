@@ -8,9 +8,9 @@ import (
 type User struct {
 	//用户信息表
 	gorm.Model
-	Username       string `gorm:"not null" json:"username" binding:"required"`
+	Username       string `gorm:"not null" json:"username" binding:"required" form:"username"`
 	Password       string `json:"password" binding:"required" form:"password"`
-	Phone          string `gorm:"unique;index:phone" json:"phone" binding:"required" form:"password"`
+	Phone          string `gorm:"unique;index:phone" json:"phone" binding:"required" form:"phone"`
 	CreateCity     string `gorm:"default:'成都'" json:"create_city" form:"create_city"`
 	CreateAddress  string `gorm:"default:'成都高新区'"`
 	InitIp         string
@@ -18,8 +18,10 @@ type User struct {
 	Token          string         `gorm:"column:token;"`
 	IsDel          bool           `gorm:"column:isdel;default:false"`                                                          //是否删除
 	UserId         sql.NullString `gorm:"unique;unique_index;not null"`                                                        //不重复id
-	InvitePerson   int            `gorm:"default:'6666'" json:"invitePerson" form:"invitePerson"`                              //邀请人id某人为空
+	InvitePerson   int            `gorm:"default:'6666'" json:"invitePerson" form:"invitePerson" binding:"required"`           //邀请人id某人为空
 	ProfilePicture string         `gorm:"default:'http://cdn.tlapp.club/pet.png'" json:"profilePicture" form:"profilePicture"` //头像地址
+	UserContent    string         `gorm:"default:''" json:"userContent" form:"userContent"`                                    //用户简介
+	UserCode       string         `orm:"default:'88888'" json:"UserCode" form:"UserCode"`
 }
 
 //自定义表名-默认是结构体名称+s
@@ -48,4 +50,16 @@ type PetDetail struct {
 	PetWeight   float32       `gorm:"default:'0.0'" json:"petWeight" form:"petWeight"`                                                  //最终售卖价
 	PetLocation string        `gorm:"defalut:'[10.0,20]'" json:"petLocation" form:"petLocation"`
 	PetSex      int           `gorm:"default:'0'" json:"pet_sex" form:"pet_sex"`
+}
+
+type RegisterCode struct {
+	gorm.Model
+	Code       string
+	CodeId     string
+	CodeDevice string
+	CodeIp     string
+}
+
+func (RegisterCode) TableName() string {
+	return "RegisterCode"
 }

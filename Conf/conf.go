@@ -21,6 +21,9 @@ var (
 	MaxIdleConns int
 	AccessKey    string
 	SecretKey    string
+	Nonce        string
+	AppKey       string
+	AppSecret    string
 )
 
 func init() {
@@ -33,6 +36,13 @@ func init() {
 	LoadRedis(load)
 	LoadWeiXinKey(load)
 	LoadQiNiuKey(load)
+	LoadWangYi(load)
+}
+
+func LoadWangYi(file *ini.File) {
+	AppKey = file.Section("WangYi").Key("AppKey").String()
+	Nonce = file.Section("WangYi").Key("Nonce").String()
+	AppSecret = file.Section("WangYi").Key("AppSecret").String()
 }
 
 func LoadMySql(file *ini.File) {

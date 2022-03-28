@@ -36,7 +36,9 @@ func Router() {
 	}
 	V2Route := R.Group("/UserConfig")
 	{
-		V2Route.POST("/QiNiu", Views.SetQINiuToken)
+
+		V2Route.POST("/QiNiu", Views.SetQINiuToken) //获取七牛云token
+		V2Route.POST("/Code", Views.CodeController) //获取验证码
 	}
 
 }

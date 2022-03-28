@@ -26,7 +26,7 @@ func init() {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	Db = dataDase
-	var ModelsArrary = []interface{}{&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{}, &Models.Article{}}
+	var ModelsArrary = []interface{}{&Models.User{}, &Models.PetDetail{}, &Models.Dynamics{}, &Models.Article{}, &Models.RegisterCode{}}
 
 	Db.AutoMigrate(ModelsArrary...)
 	fmt.Println("链接成功", err)

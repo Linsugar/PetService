@@ -67,8 +67,7 @@ func GetArticle() {
 		return
 	}
 	body2, _ := ioutil.ReadAll(post.Body)
-	value2 := body2
-	err4 := json.Unmarshal(value2, &wc)
+	err4 := json.Unmarshal(body2, &wc)
 	marshal, err := json.Marshal(&wc)
 	if err != nil {
 		return
