@@ -32,6 +32,7 @@ func init() {
 	LoadMySql(load)
 	LoadRedis(load)
 	LoadWeiXinKey(load)
+	LoadQiNiuKey(load)
 }
 
 func LoadMySql(file *ini.File) {

@@ -23,8 +23,8 @@ func engine() *gin.Engine {
 func Router() {
 	R := engine()
 	docs.SwaggerInfo.Title = "Swagger专用测试"
-	V1Route := R.Group("/v1")
-	docs.SwaggerInfo.BasePath = "/v1"
+	V1Route := R.Group("/UserCenter")
+	docs.SwaggerInfo.BasePath = "/UserCenter"
 	R.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	{
 		V1Route.Any("/user", Views.UserController)
@@ -34,7 +34,7 @@ func Router() {
 		V1Route.GET("/weixin", Views.WeixinGet)
 		V1Route.POST("/register", Views.Register)
 	}
-	V2Route := R.Group("/v2")
+	V2Route := R.Group("/UserConfig")
 	{
 		V2Route.POST("/QiNiu", Views.SetQINiuToken)
 	}

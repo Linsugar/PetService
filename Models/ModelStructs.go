@@ -47,4 +47,5 @@ type PetDetail struct {
 	PetGender   string        `gorm:"defalut:'MALE'" json:"petGender" form:"petGender"`                                                 //最终售卖价
 	PetWeight   float32       `gorm:"default:'0.0'" json:"petWeight" form:"petWeight"`                                                  //最终售卖价
 	PetLocation string        `gorm:"defalut:'[10.0,20]'" json:"petLocation" form:"petLocation"`
+	PetSex      int           `gorm:"default:'0'" json:"pet_sex" form:"pet_sex"`
 }

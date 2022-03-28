@@ -8,10 +8,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//type Article interface {
-//	ArticleAll(c *gin.Context)
-//}
-
 //文章控制器
 
 func ArticleController(c *gin.Context) {
@@ -27,7 +23,6 @@ func ArticleAll(c *gin.Context) {
 	var Article []Models.Article
 	if err := Untils.Db.Model(&Models.Article{}).Find(&Article).Error; err != nil {
 		Untils.ResponseBadState(c, err)
-
 		return
 	}
 	Untils.ResponseOkState(c, Article)
