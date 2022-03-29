@@ -47,3 +47,9 @@ UserName = "xxxx"
 PassWord = "xxxxx"
 
 CharSet = "utf8"
+
+# 使用QQ邮箱来进行验证码的注册-并限定验证码长度-：
+
+# 接入网易云短信奈何没钱 GG-：
+![image](https://user-images.githubusercontent.com/51956983/160588573-0a0ab132-0e5c-4e99-b155-a3019640aac7.png)
+
