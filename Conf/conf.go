@@ -24,6 +24,9 @@ var (
 	Nonce        string
 	AppKey       string
 	AppSecret    string
+	QQSmtp       string
+	QQUser       string
+	QQPwd        string
 )
 
 func init() {
@@ -37,6 +40,13 @@ func init() {
 	LoadWeiXinKey(load)
 	LoadQiNiuKey(load)
 	LoadWangYi(load)
+	LoadEmail(load)
+}
+
+func LoadEmail(file *ini.File) {
+	QQSmtp = file.Section("QQ").Key("smtp").String()
+	QQUser = file.Section("QQ").Key("user").String()
+	QQPwd = file.Section("QQ").Key("pwd").String()
 }
 
 func LoadWangYi(file *ini.File) {

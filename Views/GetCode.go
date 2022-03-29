@@ -6,10 +6,12 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -17,14 +19,28 @@ import (
 
 func CodeController(c *gin.Context) {
 	if c.Request.Method == "GET" {
-		GetCode(c)
+		QQCode(c)
 	} else if c.Request.Method == "POST" {
 		PostCode(c)
 	}
 }
 
-func GetCode(c *gin.Context) {
-
+func QQCode(c *gin.Context) {
+	user := c.Query("phone")
+	strlist := strings.Split(user, "@")
+	if strlist[1] == "qq.com" {
+		fmt.Println("获取到当前的参数：", user)
+		devices := c.Query("devices")
+		cip := c.ClientIP()
+		err := Untils.SendEmailQQ(user, devices, cip)
+		if err != nil {
+			Untils.ResponseBadState(c, err)
+			return
+		}
+		Untils.ResponseOkState(c, "发送成功")
+	} else {
+		Untils.ResponseBadState(c, errors.New("您的邮箱不合法，只支持QQ邮箱"))
+	}
 }
 
 func PostCode(c *gin.Context) {

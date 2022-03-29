@@ -5,6 +5,7 @@ import (
 	"PetService/Models"
 	"PetService/Untils"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -76,9 +77,9 @@ func UserPost(c *gin.Context) {
 		if err := tx.Model(&Models.User{}).Where("phone =? and password=?", formData.Phone, formData.Password).First(&Data).Error; err != nil {
 			return err
 		}
-		token, tokerr := Middlewares.GenToken(Data.UserId.String, Data.Username)
-		if tokerr != nil {
-			return tokerr
+		token, toker := Middlewares.GenToken(Data.UserId.String, Data.Username)
+		if toker != nil {
+			return toker
 		}
 		if err2 := tx.Model(&Models.User{}).Where("user_id=?", Data.UserId.String).Update("token", token).Error; err2 != nil {
 			return err2
@@ -105,7 +106,6 @@ func UserPost(c *gin.Context) {
 func Register(c *gin.Context) {
 	//用户注册
 	value := strconv.FormatInt(rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(10000000), 10)
-	fmt.Printf("得到的随机数：%v", value)
 	NowIp := c.ClientIP()
 	fmt.Printf("得到的访问ip：%v", NowIp)
 	var Register Models.User
@@ -122,6 +122,12 @@ func Register(c *gin.Context) {
 	}
 	Err := Untils.Db.Transaction(func(tx *gorm.DB) error {
 		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
+		er := tx.Debug().Model(&Models.RegisterCode{}).Where("code_device=? AND code=?", Register.UserDevice, Register.UserCode).Find(&Models.RegisterCode{}).RowsAffected
+		fmt.Println("进入此处执行多少条::========>", er)
+		if er == 0 {
+			return errors.New("请先获取最新的验证码")
+		}
+		fmt.Println("进入此处执行多少天::========>", er)
 		if err := tx.Model(&Models.User{}).Create(&Register).Error; err != nil {
 			// 返回任何错误都会回滚事务
 			return err

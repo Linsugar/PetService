@@ -18,10 +18,11 @@ type User struct {
 	Token          string         `gorm:"column:token;"`
 	IsDel          bool           `gorm:"column:isdel;default:false"`                                                          //是否删除
 	UserId         sql.NullString `gorm:"unique;unique_index;not null"`                                                        //不重复id
-	InvitePerson   int            `gorm:"default:'6666'" json:"invitePerson" form:"invitePerson" binding:"required"`           //邀请人id某人为空
+	InvitePerson   string         `gorm:"default:'6666'" json:"invitePerson" form:"invitePerson" binding:"required"`           //邀请人id某人为空
 	ProfilePicture string         `gorm:"default:'http://cdn.tlapp.club/pet.png'" json:"profilePicture" form:"profilePicture"` //头像地址
 	UserContent    string         `gorm:"default:''" json:"userContent" form:"userContent"`                                    //用户简介
-	UserCode       string         `orm:"default:'88888'" json:"UserCode" form:"UserCode"`
+	UserCode       string         `gorm:"" json:"UserCode" form:"UserCode"`
+	UserDevice     string         `gorm:"index:devices" json:"userDevice" form:"userDevice" binding:"required"` //用户设备
 }
 
 //自定义表名-默认是结构体名称+s
@@ -55,7 +56,6 @@ type PetDetail struct {
 type RegisterCode struct {
 	gorm.Model
 	Code       string
-	CodeId     string
 	CodeDevice string
 	CodeIp     string
 }
