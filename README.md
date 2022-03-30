@@ -53,3 +53,24 @@ CharSet = "utf8"
 # 接入网易云短信奈何没钱 GG-：
 ![image](https://user-images.githubusercontent.com/51956983/160588573-0a0ab132-0e5c-4e99-b155-a3019640aac7.png)
 
+# 接入Ｄｏｃｋｅｒ：
+FROM golang:1.17.3-alpine
+
+MAINTAINER Tangdi
+
+WORKDIR /PetService
+
+ENV GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOPROXY="https://goproxy.cn,direct"
+
+ADD . .
+
+
+RUN  go mod download
+
+#COPY --from=build-nev /server /
+EXPOSE 8000
+
+ENTRYPOINT ["./mygo"]
+
+
+RUN go build -o /server
