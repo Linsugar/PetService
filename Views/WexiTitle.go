@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 var wc Models.T2
@@ -23,9 +22,6 @@ func WeixinGet(c *gin.Context) {
 		Untils.ResponseOkState(c, &wc)
 	} else {
 		Tasks.GetArticle()
-		//fmt.Printf("当前返回的值1：%v\n", <-Tasks.JsonArticle)
-		Untils.SetRedisValue("weixin", <-Tasks.StringArticle, time.Second*100)
-		//fmt.Printf("当前返回的值2：%v\n", <-Tasks.JsonArticle)
 		Untils.ResponseOkState(c, <-Tasks.JsonArticle)
 	}
 	//defer close(c2)
